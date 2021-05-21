@@ -33,10 +33,20 @@ SOFTWARE.
 
 package principal;
 
-import controlador.Diagrama;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Properties;
+
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
+
+import controlador.Diagrama;
+import util.PropertiesUtil;
 
 /**
  * The main class of the application.
@@ -53,14 +63,14 @@ public class Aplicacao {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        initLookAndFeel();
-        JFrame.setDefaultLookAndFeelDecorated(true);
+    	initLookAndFeel();
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
                 fmPrincipal = new FramePrincipal();
                 fmPrincipal.setVisible(true);
+                SwingUtilities.updateComponentTreeUI(fmPrincipal);
             }
         });
     }
@@ -73,15 +83,27 @@ public class Aplicacao {
         return null;
     }
 
-    private static void initLookAndFeel() {
+    private static void initLookAndFeel()  {
         try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+        	
+        	File propriedade = new File("configuracao.properties");
+        	if(!propriedade.exists()) {
+        		propriedade.createNewFile();
+        		FileWriter arq = new FileWriter(propriedade.getAbsolutePath());
+        		System.out.println("Caminho é : " + propriedade.getAbsolutePath());
+        		PrintWriter gravarArq = new PrintWriter(arq);
+        		gravarArq.printf("lookandfeel:" +UIManager.getSystemLookAndFeelClassName());
+        		arq.close();
+        	} 
+        		 Properties prop = PropertiesUtil.getProp();
+                 UIManager.setLookAndFeel(prop.getProperty("lookandfeel"));
+        	
+        } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException | IOException ex) {
             util.BrLogger.Logger("ERROR_APP_LOAD_UI", ex.getMessage());
         }
 
     }
-
+    
     //Apagar
 //    public static Aplicacao getApplication() {
 //        return Application.getInstance(Aplicacao.class);

@@ -12,8 +12,13 @@ import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Properties;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -45,6 +50,7 @@ import controlador.apoios.TreeItem;
 import desenho.formas.Forma;
 import helper.FormHelp;
 import partepronta.FormPartes;
+import util.PropertiesUtil;
 import util.TratadorDeImagens;
 
 /**
@@ -943,6 +949,8 @@ public class FramePrincipal extends javax.swing.JFrame implements ISuperControle
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    
+    
 
 	private void configurarMenuTemas() {
 		configureMenu.setText("Temas");
@@ -955,6 +963,7 @@ public class FramePrincipal extends javax.swing.JFrame implements ISuperControle
 			jMenu.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent evt) {
 					try {
+						PropertiesUtil.setProp(lookAndFeel.getClassName());
 						UIManager.setLookAndFeel(lookAndFeel.getClassName());
 						SwingUtilities.updateComponentTreeUI(FramePrincipal.this);
 					} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
