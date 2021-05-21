@@ -5,16 +5,6 @@
  */
 package principal;
 
-import controlador.Acao;
-import controlador.Configuer;
-import controlador.Controler;
-import controlador.Controler.menuComandos;
-import controlador.Diagrama;
-import controlador.Editor;
-import controlador.ISuperControler;
-import controlador.apoios.TreeItem;
-import desenho.formas.Forma;
-import helper.FormHelp;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -22,8 +12,14 @@ import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Properties;
+
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
@@ -34,11 +30,27 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTree;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
+
+import controlador.Acao;
+import controlador.Configuer;
+import controlador.Controler;
+import controlador.Controler.menuComandos;
+import controlador.Diagrama;
+import controlador.Editor;
+import controlador.ISuperControler;
+import controlador.apoios.TreeItem;
+import desenho.formas.Forma;
+import helper.FormHelp;
 import partepronta.FormPartes;
+import util.PropertiesUtil;
 import util.TratadorDeImagens;
 
 /**
@@ -357,6 +369,7 @@ public class FramePrincipal extends javax.swing.JFrame implements ISuperControle
         menuAjuda = new javax.swing.JMenuItem();
         menuVerAtualizacao = new javax.swing.JMenuItem();
         menuSobre = new javax.swing.JMenuItem();
+        configureMenu = new javax.swing.JMenu();
 
         masterPopUp.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
             public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
@@ -904,15 +917,18 @@ public class FramePrincipal extends javax.swing.JFrame implements ISuperControle
         });
         helpMenu.add(menuVerAtualizacao);
 
+        configurarMenuTemas();
+
         menuSobre.setText(bundle.getString("FramePrincipal.menuSobre.text")); // NOI18N
         menuSobre.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuSobreActionPerformed(evt);
-            }
+        	public void actionPerformed(java.awt.event.ActionEvent evt) {
+        		menuSobreActionPerformed(evt);
+        	}
         });
         helpMenu.add(menuSobre);
 
         menuBar.add(helpMenu);
+        menuBar.add(configureMenu);
 
         setJMenuBar(menuBar);
 
@@ -933,6 +949,31 @@ public class FramePrincipal extends javax.swing.JFrame implements ISuperControle
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    
+    
+
+	private void configurarMenuTemas() {
+		configureMenu.setText("Temas");
+
+		LookAndFeelInfo[] installedLookAndFeels = UIManager.getInstalledLookAndFeels();
+
+		for (LookAndFeelInfo lookAndFeel : installedLookAndFeels) {
+			JMenuItem jMenu = new JMenuItem();
+			jMenu.setText(lookAndFeel.getName());
+			jMenu.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent evt) {
+					try {
+						PropertiesUtil.setProp(lookAndFeel.getClassName());
+						UIManager.setLookAndFeel(lookAndFeel.getClassName());
+						SwingUtilities.updateComponentTreeUI(FramePrincipal.this);
+					} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+					e.printStackTrace();
+					}
+				}
+			});
+			configureMenu.add(jMenu);
+		}
+	}
 
     private void btnMenosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenosActionPerformed
         Manager.ZoomMenos();
@@ -1330,6 +1371,8 @@ public class FramePrincipal extends javax.swing.JFrame implements ISuperControle
     private javax.swing.JPanel panSplitInspectors;
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
+    private javax.swing.JMenu configureMenu;
+    
     // End of variables declaration//GEN-END:variables
 
     @Override
