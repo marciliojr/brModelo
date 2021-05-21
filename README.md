@@ -4,6 +4,8 @@ Atualizado: brModelo 3.3 - correção de bugs e pequenas funcionalidades.
 
 Atualizado: brModelo 3.2 - correção de bugs e pequenas funcionalidades.
 
+Atualizado: brModelo 3.2.1 - Criação do menu tema para permitir a seleção de outros look and feels a aplicação.
+
 brModelo 3.0
 
 ## 1. Introdução
